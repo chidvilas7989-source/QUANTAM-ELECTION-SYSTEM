@@ -1,0 +1,74 @@
+[
+  {
+    "party_id": "party_0_nota",
+    "party_name": "NOTA (none of the above)",
+    "symbol": "https://upload.wikimedia.org/wikipedia/commons/5/59/NOTA_Option_Logo.png",
+    "votes": 0,
+    "registered_at": "2025-08-16T00:10:21.226801",
+    "status": "permanent"
+  },
+  {
+    "party_id": "party_1_nota_(none-of_the_ab",
+    "party_name": "NOTA (none-of the above)",
+    "symbol": "\ud83c\udfdb\ufe0f",
+    "votes": 4,
+    "registered_at": "2025-08-15T21:05:58.227564",
+    "status": "active"
+  },
+  {
+    "party_id": "party_2_gramina_shanshima_pa",
+    "party_name": "Gramina Shanshima party  [ GSP]",
+    "symbol": "\ud83c\udf3f",
+    "votes": 2,
+    "registered_at": "2025-08-15T21:10:36.459030",
+    "status": "active"
+  },
+  {
+    "party_id": "party_3_praja_abhivrudhi_par",
+    "party_name": "Praja Abhivrudhi party",
+    "symbol": "\ud83d\ude80",
+    "votes": 2,
+    "registered_at": "2025-08-15T21:12:10.924357",
+    "status": "active"
+  },
+  {
+    "party_id": "party_4_youth_welfare_party",
+    "party_name": "Youth Welfare party",
+    "symbol": "\ud83d\udc8e",
+    "votes": 10,
+    "registered_at": "2025-08-15T21:13:12.106999",
+    "status": "active"
+  },
+  {
+    "party_id": "party_5_akandha_andhra_party",
+    "party_name": "Akandha Andhra party",
+    "symbol": "\u2696\ufe0f",
+    "votes": 0,
+    "registered_at": "2025-08-15T21:15:52.101430",
+    "status": "active"
+  },
+  {
+    "party_id": "party_7_gajaraa",
+    "party_name": "gajaraa",
+    "symbol": "\ud83d\udc2d",
+    "votes": 0,
+    "registered_at": "2025-08-17T14:35:27.943505",
+    "status": "active"
+  },
+  {
+    "party_id": "party_8_t_d_m_k",
+    "party_name": "T D M K",
+    "symbol": "\ud83d\udee1\ufe0f",
+    "votes": 3,
+    "registered_at": "2025-08-18T10:30:33.845005",
+    "status": "active"
+  },
+  {
+    "party_id": "party_9_union_welfare_party",
+    "party_name": "Union welfare party",
+    "symbol": "\ud83d\udd25",
+    "votes": 0,
+    "registered_at": "2025-08-18T11:50:44.021365",
+    "status": "active"
+  }
+]

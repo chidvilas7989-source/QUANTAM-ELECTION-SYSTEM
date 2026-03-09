@@ -1,0 +1,16 @@
+[
+  {
+    "index": 0,
+    "timestamp": 1755256910.3677993,
+    "data": {
+      "genesis": true,
+      "message": "Quantum-Blockchain Voting System Genesis Block",
+      "timestamp": "2025-08-15T16:51:50.367799",
+      "version": "2.0"
+    },
+    "previous_hash": "0",
+    "nonce": 75,
+    "hash": "0005e63fe9ab34e865346a1c4edf45828e7a60911a8d91c4998228d4afd370af",
+    "created_at": "2025-08-15T16:51:50.369034"
+  }
+]
