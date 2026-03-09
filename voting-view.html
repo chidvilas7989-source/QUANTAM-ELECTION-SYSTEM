@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Election Commission Official Portal</title>
+<style>
+:root {
+  --accent-blue: #0066cc;
+  --accent-green: #28a745;
+  --accent-red: #dc3545;
+  --accent-yellow: #ffc107;
+  --banner-bg: linear-gradient(90deg, #003366, #0099ff);
+  --footer-bg: rgba(0, 102, 204, 0.08);
+  --card-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  --box-radius: 14px;
+}
+
+body { margin:0; font-family:'Segoe UI', sans-serif; background:#eef6fb; color:#222; display:flex; flex-direction:column; min-height:100vh;}
+.page { display:none; padding:20px; max-width:950px; margin:auto; text-align:center;}
+.page.active {display:block;}
+.banner { background:var(--banner-bg); padding:20px; text-align:center; color:white; font-size:2rem; font-weight:bold; box-shadow:var(--card-shadow); border-radius:var(--box-radius) var(--box-radius) 0 0;}
+.card { background:white; padding:25px 30px; border-radius:0 0 var(--box-radius) var(--box-radius); box-shadow:var(--card-shadow); margin-top:0; animation:fadeIn 0.5s ease;}
+@keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+button { padding:12px; font-weight:bold; border:none; border-radius:8px; cursor:pointer; font-size:1.1rem; transition:transform 0.2s ease, background 0.3s ease;}
+button:hover { transform:scale(1.05);}
+.success {color:green; margin-top:15px; font-weight:bold;}
+.error {color:red; font-weight:bold; margin-top:10px;}
+input {width:90%; padding:10px; margin-bottom:10px;}
+.nav-btn-container {margin-top:25px; display:flex; flex-direction:column; gap:15px; max-width:300px; margin-left:auto; margin-right:auto;}
+.nav-btn {width:100%; padding:15px 0; font-size:1.15rem; border-radius:10px; background:var(--accent-blue); color:white;}
+.scroll-table-container {max-height:300px; overflow-y:auto;}
+.data-table {width:100%; border-collapse:collapse;}
+.data-table th, .data-table td {padding:8px; border:1px solid #ddd;}
+.data-table thead {background:var(--accent-blue); color:white;}
+.party-card { background:#fff4e6; border-radius:var(--box-radius); margin:10px 0; padding:15px; box-shadow:var(--card-shadow);}
+.footer { background:var(--footer-bg); text-align:center; padding:18px; font-size:0.9rem; margin-top:auto;}
+.footer a {margin:0 10px; color:var(--accent-blue); font-size:1.5rem; text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<section id="landing" class="page active">
+  <div class="banner">Election Commission Portal</div>
+  <div style="margin-top:100px;">
+    <button style="background:var(--accent-blue);color:white;" onclick="showPage('admin-login')">Admin Login</button><br><br>
+    <button style="background:var(--accent-green);color:white;" onclick="showPage('po-login')">Polling Officer Login</button>
+  </div>
+</section>
+
+<!-- ADMIN LOGIN -->
+<section id="admin-login" class="page">
+  <div class="banner">Admin Login</div>
+  <div class="card">
+    <div id="admin-error" class="error" style="display:none;">Invalid credentials!</div>
+    <input type="text" id="admin-user" placeholder="User ID"><br>
+    <input type="password" id="admin-pass" placeholder="Password"><br>
+    <button style="background:var(--accent-blue);color:white;" onclick="adminLogin()">Login</button>
+    <button style="background:#888; margin-top:12px;" onclick="showPage('landing')">Back</button>
+  </div>
+</section>
+
+<!-- OFFICER LOGIN -->
+<section id="po-login" class="page">
+  <div class="banner">Polling Officer Login</div>
+  <div class="card">
+    <input type="text" id="po-keyid-login" placeholder="PO Key-ID">
+    <input type="text" id="po-number-login" placeholder="PO Number">
+    <button style="background:var(--accent-blue);color:white;" onclick="officerLogin()">Login</button>
+    <div id="po-login-error" class="error" style="display:none;">Invalid Officer Details!</div>
+    <button style="margin-top:15px;background:#888;" onclick="showPage('landing')">Back</button>
+  </div>
+</section>
+
+<!-- VOTER LOGIN -->
+<section id="voter-login" class="page">
+  <div class="banner">VOTER LOGIN</div>
+  <div class="card">
+    <input type="text" id="voter-qid-input" placeholder="Voter Q-ID"><br>
+    <button style="background:var(--accent-green);color:white;" onclick="validateVoter()">Enter</button>
+    <div id="voter-msg" class="success" style="display:none;"></div>
+    <div id="voter-error" class="error" style="display:none;"></div>
+  </div>
+  <button style="margin-top:15px;background:#888;" onclick="logoutOfficer()">Officer Logout</button>
+</section>
+
+<!-- BALLOT PAGE -->
+<section id="ballot" class="page">
+  <div class="banner">BALLOT</div>
+  <div id="party-vote-list" style="margin-top:20px;"></div>
+</section>
+
+<!-- ADMIN DASHBOARD -->
+<section id="home" class="page">
+  <div class="banner">Election Admin</div>
+  <div class="nav-btn-container">
+    <button class="nav-btn" onclick="showPage('voter-reg')">Voter Registration</button>
+    <button class="nav-btn" onclick="showPage('po-reg')">Polling Officer Registration</button>
+    <button class="nav-btn" onclick="showPage('party-reg')">Party Registration</button>
+    <button class="nav-btn" onclick="showPage('fraud-det')">Fraud Detection</button>
+    <button class="nav-btn" onclick="showPage('admin-records')">View Registered Lists</button>
+    <button class="nav-btn" style="background:var(--accent-yellow);color:black;" onclick="showPage('results')">Results</button>
+    <button style="background:#c00; margin-top:30px;" class="nav-btn" onclick="logout()">Logout</button>
+  </div>
+</section>
+
+<!-- PARTY REGISTRATION -->
+<section id="party-reg" class="page">
+  <div class="banner">Party Registration</div>
+  <div class="card">
+    <input type="text" id="party-name" placeholder="Party Name"><br>
+    <button style="background:var(--accent-blue);color:white;" onclick="registerParty()">Register</button>
+    <div class="success" id="party-success" style="display:none;">Party Registered Successfully!</div>
+    <button style="margin-top: 15px; background:#888;" onclick="showPage('home')">Home</button>
+  </div>
+</section>
+
+<!-- RESULTS PAGE -->
+<section id="results" class="page">
+  <div class="banner">ELECTION RESULTS</div>
+  <div class="card" id="results-container"></div>
+  <button style="margin-top: 15px; background:#888;" onclick="showPage('home')">Home</button>
+</section>
+
+<!-- VOTER REGISTRATION -->
+<section id="voter-reg" class="page">
+  <div class="banner">Voter Registration</div>
+  <div class="card">
+    <input type="text" id="voter-name" placeholder="Name">
+    <input type="text" id="voter-idnum" placeholder="ID Number">
+    <input type="text" id="voter-bio" placeholder="Biometric Data">
+    <button style="background:var(--accent-blue);color:white;" onclick="registerVoter()">Register</button>
+    <div class="success" id="voter-success" style="display:none;">Voter Registered! Q-ID: <span id="voter-qid"></span></div>
+    <button style="margin-top:15px;background:#888;" onclick="showPage('home')">Home</button>
+  </div>
+</section>
+
+<!-- PO REGISTRATION -->
+<section id="po-reg" class="page">
+  <div class="banner">Polling Officer Registration</div>
+  <div class="card">
+    <input type="text" id="officer-name" placeholder="Officer Name">
+    <input type="text" id="officer-num" placeholder="Officer Number">
+    <button style="background:var(--accent-blue);color:white;" onclick="registerPO()">Register</button>
+    <div class="success" id="po-success" style="display:none;">Officer Registered! Key-ID: <span id="officer-key"></span></div>
+    <button style="margin-top:15px;background:#888;" onclick="showPage('home')">Home</button>
+  </div>
+</section>
+
+<!-- FRAUD DETECTION -->
+<section id="fraud-det" class="page">
+  <div class="banner">Fraud Detection</div>
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>Fraud Q-ID</th></tr></thead>
+      <tbody id="fraud-table"></tbody>
+    </table>
+  </div>
+  <button style="margin-top:15px;background:#888;" onclick="showPage('home')">Home</button>
+</section>
+
+<!-- ADMIN RECORDS -->
+<section id="admin-records" class="page">
+  <div class="banner">Registered Lists</div>
+  <div class="card">
+    <h3>Voters</h3>
+    <div class="scroll-table-container"><table class="data-table" id="voters-table"><thead><tr><th>Name</th><th>ID</th><th>Bio</th><th>Q-ID</th></tr></thead><tbody></tbody></table></div>
+    <h3 style="margin-top:20px;">Polling Officers</h3>
+    <div class="scroll-table-container"><table class="data-table" id="officers-table"><thead><tr><th>Name</th><th>Number</th><th>Key-ID</th></tr></thead><tbody></tbody></table></div>
+    <h3 style="margin-top:20px;">Fraud Votes</h3>
+    <div class="scroll-table-container"><table class="data-table" id="fraudlist-table"><thead><tr><th>Q-ID</th></tr></thead><tbody></tbody></table></div>
+    <h3 style="margin-top:20px;">Parties & Votes</h3>
+    <div class="scroll-table-container"><table class="data-table" id="party-table"><thead><tr><th>Party Name</th><th>Votes</th></tr></thead><tbody></tbody></table></div>
+  </div>
+  <button style="margin-top:15px;background:#888;" onclick="showPage('home')">Home</button>
+</section>
+
+<footer class="footer">Election Commission of India<br/><a href="#">📷</a><a href="#">✉️</a></footer>
+
+<script>
+let voterList=JSON.parse(localStorage.getItem('voterList')||'[]');
+let officerList=JSON.parse(localStorage.getItem('officerList')||'[]');
+let fraudList=JSON.parse(localStorage.getItem('fraudList')||'[]');
+let partyList=JSON.parse(localStorage.getItem('partyList')||'[]');
+let votes=JSON.parse(localStorage.getItem('votes')||'{}');
+let currentOfficer=null;
+
+function saveData(){
+  localStorage.setItem('voterList', JSON.stringify(voterList));
+  localStorage.setItem('officerList', JSON.stringify(officerList));
+  localStorage.setItem('fraudList', JSON.stringify(fraudList));
+  localStorage.setItem('partyList', JSON.stringify(partyList));
+  localStorage.setItem('votes', JSON.stringify(votes));
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='results') renderResults();
+  if(id==='ballot') renderBallot();
+  if(id==='admin-records') renderAdminRecords();
+  if(id==='fraud-det') renderFraud();
+}
+
+function adminLogin(){
+  let u=document.getElementById('admin-user').value.trim();
+  let p=document.getElementById('admin-pass').value.trim();
+  if(u==='admin123' && p==='admin@123'){ showPage('home');}
+  else document.getElementById('admin-error').style.display='block';
+}
+
+function registerVoter(){
+  let name=document.getElementById('voter-name').value.trim();
+  let idnum=document.getElementById('voter-idnum').value.trim();
+  let bio=document.getElementById('voter-bio').value.trim();
+  if(!name||!idnum||!bio){ alert("Fill all fields"); return; }
+  let qid=Math.random().toString(36).substr(2,6).toUpperCase();
+  voterList.push({name,id:idnum,bio,qid,hasVoted:false});
+  saveData();
+  document.getElementById('voter-qid').textContent=qid;
+  document.getElementById('voter-success').style.display='block';
+  setTimeout(()=>document.getElementById('voter-success').style.display='none',2000);
+}
+
+function registerPO(){
+  let name=document.getElementById('officer-name').value.trim();
+  let num=document.getElementById('officer-num').value.trim();
+  if(!name||!num){ alert("Fill all fields"); return; }
+  let keyId=Math.floor(Math.random()*10000).toString().padStart(4,'0');
+  officerList.push({name,num,keyid:keyId});
+  saveData();
+  document.getElementById('officer-key').textContent=keyId;
+  document.getElementById('po-success').style.display='block';
+  setTimeout(()=>document.getElementById('po-success').style.display='none',2000);
+}
+
+function registerParty(){
+  let name=document.getElementById('party-name').value.trim();
+  if(!name){ alert("Enter Party Name"); return; }
+  if(partyList.includes(name)){ alert("Party already exists"); return;}
+  partyList.push(name);
+  votes[name]=0;
+  saveData();
+  document.getElementById('party-success').style.display='block';
+  setTimeout(()=>document.getElementById('party-success').style.display='none',2000);
+}
+
+function officerLogin(){
+  let keyid=document.getElementById('po-keyid-login').value.trim();
+  let num=document.getElementById('po-number-login').value.trim();
+  let match=officerList.find(o=>o.keyid===keyid && o.num===num);
+  if(match){
+    currentOfficer=match;
+    document.getElementById('po-login-error').style.display='none';
+    showPage('voter-login');
+  } else {
+    document.getElementById('po-login-error').style.display='block';
+  }
+}
+
+function validateVoter(){
+  if(!currentOfficer){ showError("Officer not logged in!"); return; }
+  let qid=document.getElementById('voter-qid-input').value.trim().toUpperCase();
+  let voter=voterList.find(v=>v.qid===qid);
+  if(!voter){ showError("Invalid Voter Q-ID"); return; }
+  if(voter.hasVoted){
+    fraudList.push(qid);
+    saveData();
+    showError("Fraud detected! Already voted.");
+    return;
+  }
+  voter.hasVoted=true;
+  saveData();
+  document.getElementById('voter-msg').style.display='block';
+  document.getElementById('voter-msg').textContent="Voter-ID valid";
+  setTimeout(()=>showPage('ballot'),1000);
+}
+
+function showError(msg){
+  document.getElementById('voter-error').style.display='block';
+  document.getElementById('voter-error').textContent=msg;
+}
+
+function logoutOfficer(){
+  currentOfficer=null;
+  showPage('po-login');
+}
+
+function renderBallot(){
+  let container=document.getElementById('party-vote-list');
+  container.innerHTML="";
+  partyList.forEach(p=>{
+    let div=document.createElement('div');
+    div.className='party-card';
+    div.innerHTML=`<h3>${p}</h3><button style="background:var(--accent-green);color:white;" onclick="castVote('${p}')">Vote</button>`;
+    container.appendChild(div);
+  });
+}
+
+function castVote(p){
+  votes[p]=(votes[p]||0)+1;
+  saveData();
+  alert("Vote recorded for "+p);
+  showPage('voter-login');
+}
+
+function renderResults(){
+  let res=document.getElementById('results-container');
+  res.innerHTML="";
+  partyList.forEach(p=>{
+    res.innerHTML+=`<p><b>${p}</b>: ${votes[p]||0} votes</p>`;
+  });
+}
+
+function renderAdminRecords(){
+  document.querySelector("#voters-table tbody").innerHTML=voterList.map(v=>`<tr><td>${v.name}</td><td>${v.id}</td><td>${v.bio}</td><td>${v.qid}</td></tr>`).join('')||'<tr><td colspan="4">No voters</td></tr>';
+  document.querySelector("#officers-table tbody").innerHTML=officerList.map(o=>`<tr><td>${o.name}</td><td>${o.num}</td><td>${o.keyid}</td></tr>`).join('')||'<tr><td colspan="3">No officers</td></tr>';
+  document.querySelector("#fraudlist-table tbody").innerHTML=fraudList.map(f=>`<tr><td>${f}</td></tr>`).join('')||'<tr><td>No fraud</td></tr>';
+  document.querySelector("#party-table tbody").innerHTML=partyList.map(p=>`<tr><td>${p}</td><td>${votes[p]||0}</td></tr>`).join('')||'<tr><td colspan="2">No parties</td></tr>';
+}
+
+function renderFraud(){
+  document.querySelector("#fraud-table").innerHTML=fraudList.map(f=>`<tr><td>${f}</td></tr>`).join('')||'<tr><td>No fraud detected</td></tr>';
+}
+
+function logout(){ showPage('landing'); }
+</script>
+</body>
+</html>
